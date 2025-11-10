@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-4">🅿️ Available Parking Lots</h2>
+
+<div class="table-responsive">
+  <table class="table table-striped align-middle">
+    <thead class="table-dark">
+      <tr>
+        <th>Name</th>
+        <th>Address</th>
+        <th>Price (₹)</th>
+        <th>Available</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in lots %}
+      <tr>
+        <td>{{ item.lot.prime_location_name }}</td>
+        <td>{{ item.lot.address }}</td>
+        <td>{{ item.lot.price }}</td>
+        <td>
+          {% if item.available > 0 %}
+            <span class="badge bg-success">{{ item.available }}</span>
+          {% else %}
+            <span class="badge bg-danger">0</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if item.available > 0 %}
+          <form method="POST" action="{{ url_for('book_spot', lot_id=item.lot.id) }}" class="m-0">
+            <button class="btn btn-success btn-sm">Book</button>
+          </form>
+          {% else %}
+          <button class="btn btn-secondary btn-sm" disabled>No spots</button>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<a href="{{ url_for('user_dashboard') }}" class="btn btn-secondary mt-3">← Back to Dashboard</a>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="text-center mt-5">
+  <h1 class="display-4 fw-bold mb-3">🚗 Vehicle Parking App</h1>
+  <p class="lead mb-4">
+    Manage parking lots, spots, and reservations with ease.<br>
+    Book your parking, release it, and track your history effortlessly.
+  </p>
+
+  {% if current_user.is_authenticated %}
+    {% if current_user.role == 'admin' %}
+      <div class="alert alert-success">
+        Logged in as <strong>Admin</strong>. Go to your dashboard:
+      </div>
+      <a href="{{ url_for('admin_dashboard') }}" class="btn btn-primary btn-lg me-2">Admin Dashboard</a>
+      <a href="{{ url_for('logout') }}" class="btn btn-outline-danger btn-lg">Logout</a>
+    {% elif current_user.role == 'user' %}
+      <div class="alert alert-info">
+        Logged in as <strong>{{ current_user.username }}</strong>. Manage your parking:
+      </div>
+      <a href="{{ url_for('user_dashboard') }}" class="btn btn-primary btn-lg me-2">User Dashboard</a>
+      <a href="{{ url_for('logout') }}" class="btn btn-outline-danger btn-lg">Logout</a>
+    {% endif %}
+  {% else %}
+    <div class="card shadow-sm mx-auto" style="max-width: 500px;">
+      <div class="card-body">
+        <h5 class="card-title mb-3">Welcome! Please login or register:</h5>
+        <a href="{{ url_for('login') }}" class="btn btn-success btn-lg me-2">Login</a>
+        <a href="{{ url_for('register') }}" class="btn btn-outline-primary btn-lg">Register</a>
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+{% endblock %}

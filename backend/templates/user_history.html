@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-4">📜 My Reservation History</h2>
+
+<div class="table-responsive">
+  <table class="table table-hover align-middle">
+    <thead class="table-dark">
+      <tr>
+        <th>Spot ID</th>
+        <th>Lot Name</th>
+        <th>Start Time</th>
+        <th>Leaving Time</th>
+        <th>Cost (₹)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for res in history %}
+      <tr>
+        <td>{{ res.spot_id }}</td>
+        <td>{{ res.spot.lot.prime_location_name }}</td>
+        <td>{{ res.parking_timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+        <td>
+          {% if res.leaving_timestamp %}
+            {{ res.leaving_timestamp.strftime('%Y-%m-%d %H:%M:%S') }}
+          {% else %}
+            <span class="badge bg-warning text-dark">Still Parked</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if res.cost %}
+            ₹{{ res.cost }}
+          {% else %}
+            -
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<a href="{{ url_for('user_dashboard') }}" class="btn btn-secondary mt-3">← Back to Dashboard</a>
+{% endblock %}

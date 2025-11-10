@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-4">🛠️ Admin Dashboard</h2>
+
+<div class="row mb-4">
+  <div class="col-md-4">
+    <div class="card text-white bg-primary mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Total Spots</h5>
+        <p class="card-text fs-3 fw-bold">{{ total_spots }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card text-white bg-success mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Available Spots</h5>
+        <p class="card-text fs-3 fw-bold">{{ available }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card text-white bg-danger mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Occupied Spots</h5>
+        <p class="card-text fs-3 fw-bold">{{ occupied }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card shadow-sm mb-4">
+  <div class="card-body text-center">
+    <h5 class="card-title mb-3">Spots Status Overview</h5>
+    <div style="width: 250px; height: 250px; margin: 0 auto;">
+      <canvas id="adminChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="card shadow-sm mb-4">
+  <div class="card-body">
+    <h5 class="card-title mb-3">📅 Daily Bookings</h5>
+    <canvas id="dailyBookingsChart" height="100"></canvas>
+  </div>
+</div>
+
+<div class="mt-3">
+  <a href="{{ url_for('admin_lots') }}" class="btn btn-primary">Manage Parking Lots</a>
+</div>
+
+<script>
+  // Pie chart for spot status
+  new Chart(document.getElementById('adminChart').getContext('2d'), {
+    type: 'pie',
+    data: {
+      labels: ['Occupied', 'Available'],
+      datasets: [{
+        data: [{{ occupied }}, {{ available }}],
+        backgroundColor: ['#dc3545','#28a745']
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom' }
+      }
+    }
+  });
+
+  const bookingLabels = {{ booking_labels|tojson }};
+  const bookingCounts = {{ booking_counts|tojson }};
+
+  new Chart(document.getElementById('dailyBookingsChart').getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: bookingLabels,
+      datasets: [{
+        label: 'Bookings',
+        data: bookingCounts,
+        backgroundColor: '#0d6efd'
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true,
+          title: { display: true, text: 'Bookings Count' }
+        },
+        x: {
+          title: { display: true, text: 'Date' }
+        }
+      }
+    }
+  });
+</script>
+
+{% endblock %}
+

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vehicle Parking App</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Optional custom styles -->
+   <!-- Add this in base.html, before your closing </body> -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    footer {
+      margin-top: 3rem;
+      padding: 1rem 0;
+      background-color: #343a40;
+      color: #fff;
+      text-align: center;
+    }
+    .navbar-brand {
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+    .flash-container {
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{{ url_for('index') }}">ParkingApp</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          {% if current_user.is_authenticated %}
+            {% if current_user.role == 'admin' %}
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('admin_lots') }}">Manage Lots</a>
+              </li>
+            {% elif current_user.role == 'user' %}
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('user_dashboard') }}">User Dashboard</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('user_lots') }}">Book a Spot</a>
+              </li>
+            {% endif %}
+            <li class="nav-item">
+              <a class="nav-link text-danger" href="{{ url_for('logout') }}">Logout</a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('register') }}">Register</a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Flash messages -->
+  <div class="container flash-container">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for msg in messages %}
+          <div class="alert alert-info alert-dismissible fade show" role="alert">
+            {{ msg }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </div>
+
+  <!-- Main content -->
+  <div class="container mt-4">
+    {% block content %}{% endblock %}
+  </div>
+
+  <footer>
+    &copy; {{ current_year if current_year is defined else "2025" }} Vehicle Parking App. All rights reserved.
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
